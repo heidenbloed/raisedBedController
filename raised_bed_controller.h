@@ -1,10 +1,3 @@
-/*
- * raised_bed_controller.h
- *
- *  Created on: Dec 29, 2020
- *      Author: tim
- */
-
 #ifndef RAISED_BED_CONTROLLER_H_
 #define RAISED_BED_CONTROLLER_H_
 
@@ -36,6 +29,5 @@ void updateTftPumpVoltage(String pumpVoltage);
 void updateTftTime(String timeStr);
 void tankRefillISR();
 void manualWateringISR();
-
 
 #endif /* RAISED_BED_CONTROLLER_H_ */

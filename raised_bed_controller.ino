@@ -8,7 +8,7 @@ const int btnRefillPin = 2;
 const int btnWateringPin = 3;
 const int btnLimitPin = 4;
 const int pumpPin = 5;
-const int tftRstPin = 6;
+const int tftLedPin = 6;
 const int tftCsPin = 7;
 const int tftDcPin = 8;
 const int nrf24CePin = 9;
@@ -68,7 +68,7 @@ RF24 radio(nrf24CePin, nrf24CsnPin);
 const uint8_t receivingAddress[] = "water";
 const uint8_t sendingAddress[] = "wwitc";
 
-Adafruit_ILI9341 tft = Adafruit_ILI9341(tftCsPin, tftDcPin, tftRstPin);
+Adafruit_ILI9341 tft = Adafruit_ILI9341(tftCsPin, tftDcPin);
 
 Adafruit_INA219 ina219;
 
@@ -88,6 +88,7 @@ void setup()
 	pinMode(btnWateringPin, INPUT_PULLUP);
 	pinMode(btnLimitPin, INPUT_PULLUP);
 	pinMode(pumpPin, OUTPUT);
+	pinMode(tftLedPin, OUTPUT);
 	pinMode(moistureSensor1Pin, INPUT);
 	pinMode(moistureSensor2Pin, INPUT);
 	pinMode(moistureSensorPowerPin, OUTPUT);
@@ -117,6 +118,7 @@ void setup()
     digitalWrite(ledWaterPin, LOW);
 #endif
 	digitalWrite(moistureSensorPowerPin, LOW);
+	digitalWrite(tftLedPin, LOW);
 
 	updateTftStatus("Idle");
 }
@@ -238,17 +240,21 @@ void loop()
 
 	if (!displayIsOn && digitalRead(btnLimitPin) == LOW)
 	{
+#ifdef DEBUGGING
+		Serial.println("Limit button is low -> turn TFT on.");
+#endif
 		displayIsOn = true;
-		//digitalWrite(tftBklPin, HIGH);
+		digitalWrite(tftLedPin, HIGH);
 	}
 
 	if (displayIsOn && digitalRead(btnLimitPin) == HIGH)
 	{
+#ifdef DEBUGGING
+		Serial.println("Limit button is high -> turn TFT off.");
+#endif
 		displayIsOn = false;
-		//digitalWrite(tftBklPin, LOW);
+		digitalWrite(tftLedPin, LOW);
 	}
-
-	// TODO: turn TFT off
 
 	delay(5);
 }
